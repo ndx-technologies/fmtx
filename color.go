@@ -72,3 +72,13 @@ func BgGreenS(s string) string {
 	}
 	return BgGreen + s + Reset
 }
+
+func ColorizeMinMax[T int | float32 | float64](s string, v, min, max T, minC, maxC string) string {
+	if v == min {
+		return minC + s + Reset
+	}
+	if v == max {
+		return maxC + s + Reset
+	}
+	return s
+}
