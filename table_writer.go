@@ -77,7 +77,6 @@ func (s TableWriter) WriteHeaderLine() {
 		if i > 0 {
 			s.Out.WriteString(" ")
 		}
-
 		s.Out.WriteString(Dim)
 		for range col.Width {
 			s.Out.WriteString("─") // box-drawing
