@@ -14,7 +14,8 @@ func displayWidth(s string) int {
 			(r >= 0x3040 && r <= 0x309F) || // Hiragana
 			(r >= 0x30A0 && r <= 0x30FF) || // Katakana
 			(r >= 0x3000 && r <= 0x303F) || // CJK Symbols and Punctuation
-			(r >= 0xFF00 && r <= 0xFFEF) { // Fullwidth Forms
+			(r >= 0xFF00 && r <= 0xFFEF) || // Fullwidth Forms
+			(r >= 0x1F300 && r <= 0x1FAFF) { // Emoji
 			w += 2
 		} else {
 			w++
@@ -34,12 +35,13 @@ func truncate(s string, width int) string {
 	for i := range runes {
 		cw := 1
 		r := runes[i]
-		// CJK characters and fullwidth forms are double-width
+		// CJK characters, fullwidth forms, and emoji are double-width
 		if unicode.Is(unicode.Han, r) || unicode.Is(unicode.Hangul, r) ||
 			(r >= 0x3040 && r <= 0x309F) || // Hiragana
 			(r >= 0x30A0 && r <= 0x30FF) || // Katakana
 			(r >= 0x3000 && r <= 0x303F) || // CJK Symbols and Punctuation
-			(r >= 0xFF00 && r <= 0xFFEF) { // Fullwidth Forms
+			(r >= 0xFF00 && r <= 0xFFEF) || // Fullwidth Forms
+			(r >= 0x1F300 && r <= 0x1FAFF) { // Emoji
 			cw = 2
 		}
 		if w+cw > width-3 {

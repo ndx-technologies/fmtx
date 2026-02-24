@@ -18,6 +18,10 @@ func TestDisplayWidth(t *testing.T) {
 		RedS("hello"):   5,  // ANSI stripped
 		GreenS("こんにちは"): 10, // ANSI stripped, CJK counted
 		DimS("test"):    4,
+		"💎":             2, // emoji is double-width
+		"🔑":             2, // emoji is double-width
+		"💎Store%":       8, // 2 + 6
+		"🔑Perm%":        7, // 2 + 5
 	}
 
 	for s, w := range tests {
