@@ -65,7 +65,8 @@ func (s TableWriter) WriteHeader() {
 		if i > 0 {
 			s.Out.WriteString(" ")
 		}
-		s.withDefault(col).Alignment.Write(s.Out, DimS(col.Header), col.Width)
+		col = s.withDefault(col)
+		col.Alignment.Write(s.Out, DimS(col.Header), col.Width)
 	}
 	s.Out.WriteString("\n")
 }
@@ -91,7 +92,7 @@ func (s TableWriter) WriteHeaderLine() {
 			s.Out.WriteString(" ")
 		}
 		s.Out.WriteString(Dim)
-		for range col.Width {
+		for range s.withDefault(col).Width {
 			s.Out.WriteString("─") // box-drawing
 		}
 		s.Out.WriteString(Reset)
