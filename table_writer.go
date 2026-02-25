@@ -39,11 +39,24 @@ func (s TablCol) Write(out interface{ WriteString(string) (int, error) }, v stri
 // TableWriter provides simple table formatting with ANSI color support.
 // Values that are too long will get truncated into column width.
 type TableWriter struct {
-	Indent string
-	Cols   []TablCol
-	Out    interface {
+	Indent     string
+	Cols       []TablCol
+	ColDefault map[string]TablCol
+	Out        interface {
 		WriteString(s string) (n int, err error)
 	}
+}
+
+func (s TableWriter) withDefault(v TablCol) TablCol {
+	if s.ColDefault == nil {
+		return v
+	}
+	if d, ok := s.ColDefault[v.Header]; ok {
+		if v.Width == 0 {
+			v.Width = d.Width
+		}
+	}
+	return v
 }
 
 func (s TableWriter) WriteHeader() {
@@ -52,7 +65,7 @@ func (s TableWriter) WriteHeader() {
 		if i > 0 {
 			s.Out.WriteString(" ")
 		}
-		col.Alignment.Write(s.Out, DimS(col.Header), col.Width)
+		s.withDefault(col).Alignment.Write(s.Out, DimS(col.Header), col.Width)
 	}
 	s.Out.WriteString("\n")
 }
@@ -66,7 +79,7 @@ func (s TableWriter) WriteSubHeader(vs ...string) {
 		if i > 0 {
 			s.Out.WriteString(" ")
 		}
-		c.Write(s.Out, DimS(vs[i]))
+		s.withDefault(c).Write(s.Out, DimS(vs[i]))
 	}
 	s.Out.WriteString("\n")
 }
@@ -95,7 +108,7 @@ func (s TableWriter) WriteRow(vs ...string) {
 		if i > 0 {
 			s.Out.WriteString(" ")
 		}
-		c.Write(s.Out, vs[i])
+		s.withDefault(c).Write(s.Out, vs[i])
 	}
 	s.Out.WriteString("\n")
 }
