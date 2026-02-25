@@ -3,7 +3,8 @@ package fmtx
 type Alignment uint8
 
 const (
-	AlignLeft Alignment = iota
+	AlignUndefined Alignment = iota
+	AlignLeft
 	AlignRight
 )
 
@@ -14,7 +15,7 @@ func (a Alignment) Write(out interface{ WriteString(string) (int, error) }, s st
 			out.WriteString(" ")
 		}
 		out.WriteString(s)
-	case AlignLeft:
+	case AlignLeft, AlignUndefined:
 		out.WriteString(s)
 		for i := displayWidth(s); i < width; i++ {
 			out.WriteString(" ")
@@ -54,6 +55,9 @@ func (s TableWriter) withDefault(v TablCol) TablCol {
 	if d, ok := s.ColDefault[v.Header]; ok {
 		if v.Width == 0 {
 			v.Width = d.Width
+		}
+		if v.Alignment == AlignUndefined {
+			v.Alignment = d.Alignment
 		}
 	}
 	return v
