@@ -95,11 +95,15 @@ func (s TableWriter) WriteHeaderLine() {
 		if i > 0 {
 			s.Out.WriteString(" ")
 		}
-		s.Out.WriteString(Dim)
+		if EnableColor {
+			s.Out.WriteString(Dim)
+		}
 		for range s.withDefault(col).Width {
 			s.Out.WriteString("─") // box-drawing
 		}
-		s.Out.WriteString(Reset)
+		if EnableColor {
+			s.Out.WriteString(Reset)
+		}
 	}
 	s.Out.WriteString("\n")
 }
