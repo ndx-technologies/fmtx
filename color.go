@@ -85,3 +85,26 @@ func ColorizeMinMax[T int | float32 | float64](s string, v, min, max T, minC, ma
 	}
 	return s
 }
+
+// ColorizeDist colorizes s based on which interval v falls into.
+// points must be sorted ascending; colors must have len(points)+1 elements.
+// colors[0]: v < points[0]
+// colors[i]: points[i-1] <= v < points[i]
+// colors[len(points)]: v >= points[len(points)-1]
+func ColorizeDist[T int | float32 | float64](s string, v T, points []T, colors []string) string {
+	if !EnableColor {
+		return s
+	}
+	for i, p := range points {
+		if v < p {
+			if i < len(colors) {
+				return colors[i] + s + Reset
+			}
+			return s
+		}
+	}
+	if len(colors) > len(points) {
+		return colors[len(points)] + s + Reset
+	}
+	return s
+}
