@@ -8,6 +8,10 @@ import (
 func displayWidth(s string) int {
 	w := 0
 	for _, r := range colorCleaner.Replace(s) {
+		// Combining/nonspacing marks are zero-width (e.g. Thai tone marks, diacritics)
+		if unicode.Is(unicode.Mn, r) || unicode.Is(unicode.Me, r) {
+			continue
+		}
 		// CJK characters and fullwidth forms are double-width
 		// Box drawing and geometric shapes are single-width
 		if unicode.Is(unicode.Han, r) || unicode.Is(unicode.Hangul, r) ||
@@ -33,8 +37,12 @@ func truncate(s string, width int) string {
 	runes := []rune(visible)
 	w := 0
 	for i := range runes {
-		cw := 1
 		r := runes[i]
+		// Combining/nonspacing marks are zero-width
+		if unicode.Is(unicode.Mn, r) || unicode.Is(unicode.Me, r) {
+			continue
+		}
+		cw := 1
 		// CJK characters, fullwidth forms, and emoji are double-width
 		if unicode.Is(unicode.Han, r) || unicode.Is(unicode.Hangul, r) ||
 			(r >= 0x3040 && r <= 0x309F) || // Hiragana

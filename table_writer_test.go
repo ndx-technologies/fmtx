@@ -22,6 +22,7 @@ func TestDisplayWidth(t *testing.T) {
 		"🔑":             2, // emoji is double-width
 		"💎Store%":       8, // 2 + 6
 		"🔑Perm%":        7, // 2 + 5
+		"ช้อปปี้":       4, // 4 base glyphs * 1 + 3 combining marks * 0
 	}
 
 	for s, w := range tests {
