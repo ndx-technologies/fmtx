@@ -12,6 +12,10 @@ func displayWidth(s string) int {
 		if unicode.Is(unicode.Mn, r) || unicode.Is(unicode.Me, r) {
 			continue
 		}
+		// Format characters are zero-width (e.g. Arabic RTL mark U+200F, directional embeddings)
+		if unicode.Is(unicode.Cf, r) {
+			continue
+		}
 		// CJK characters and fullwidth forms are double-width
 		// Box drawing and geometric shapes are single-width
 		if unicode.Is(unicode.Han, r) || unicode.Is(unicode.Hangul, r) ||
@@ -40,6 +44,10 @@ func truncate(s string, width int) string {
 		r := runes[i]
 		// Combining/nonspacing marks are zero-width
 		if unicode.Is(unicode.Mn, r) || unicode.Is(unicode.Me, r) {
+			continue
+		}
+		// Format characters are zero-width (e.g. Arabic RTL mark U+200F, directional embeddings)
+		if unicode.Is(unicode.Cf, r) {
 			continue
 		}
 		cw := 1
