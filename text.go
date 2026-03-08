@@ -32,6 +32,17 @@ func displayWidth(s string) int {
 	return w
 }
 
+// hasRTL reports whether s contains RTL characters (Arabic, Hebrew) that would
+// cause bidi reordering in a terminal, making left-aligned padding appear on the wrong side.
+func hasRTL(s string) bool {
+	for _, r := range colorCleaner.Replace(s) {
+		if unicode.Is(unicode.Arabic, r) || unicode.Is(unicode.Hebrew, r) {
+			return true
+		}
+	}
+	return false
+}
+
 func truncate(s string, width int) string {
 	visible := colorCleaner.Replace(s)
 	if displayWidth(visible) <= width {

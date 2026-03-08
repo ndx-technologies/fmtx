@@ -44,6 +44,15 @@ func TestTableWriter_WriteRow(t *testing.T) {
 		},
 		{
 			cols: []TablCol{
+				{Header: "Keyword", Alignment: AlignLeft, Width: 15},
+				{Header: "N", Alignment: AlignRight, Width: 3},
+			},
+			data: []string{"كلنا امن", "2"},
+			// Arabic is 8 chars wide; LRI/PDI wrap prevents bidi reordering of trailing spaces.
+			row: "\u2066كلنا امن\u2069" + "       " + " " + "  2",
+		},
+		{
+			cols: []TablCol{
 				{Header: "Title", Alignment: AlignLeft, Width: 10},
 			},
 			data: []string{BlueS("This is a very long title that should be truncated")},

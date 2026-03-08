@@ -16,7 +16,15 @@ func (a Alignment) Write(out interface{ WriteString(string) (int, error) }, s st
 		}
 		out.WriteString(s)
 	case AlignLeft, AlignUndefined:
-		out.WriteString(s)
+		// Wrap RTL text in Left-to-Right Isolate so the terminal bidi algorithm
+		// keeps the trailing padding spaces visually to the right of the text.
+		if hasRTL(s) {
+			out.WriteString("\u2066") // LEFT-TO-RIGHT ISOLATE
+			out.WriteString(s)
+			out.WriteString("\u2069") // POP DIRECTIONAL ISOLATE
+		} else {
+			out.WriteString(s)
+		}
 		for i := displayWidth(s); i < width; i++ {
 			out.WriteString(" ")
 		}
