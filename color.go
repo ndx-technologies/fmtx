@@ -1,6 +1,9 @@
 package fmtx
 
-import "strings"
+import (
+	"os"
+	"strings"
+)
 
 const (
 	Reset    = "\033[0m"
@@ -17,7 +20,7 @@ const (
 	BgYellow = "\033[43m"
 )
 
-var EnableColor = true
+var EnableColor = os.Getenv("NO_COLOR") == ""
 
 var colorCleaner = strings.NewReplacer(
 	Red, "", Green, "", Yellow, "", Blue, "", Magenta, "", Cyan, "",
