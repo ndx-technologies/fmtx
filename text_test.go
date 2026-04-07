@@ -17,6 +17,10 @@ func TestDisplayWidth(t *testing.T) {
 		RedS("hello"):          5,  // ANSI stripped
 		GreenS("こんにちは"):        10, // ANSI stripped, CJK counted
 		DimS("test"):           4,
+		"⭐":                    2, // U+2B50 wide emoji star
+		"⚠️":                   2, // U+26A0 + VS-16: text symbol upgraded to emoji
+		"👇🏻":                   2, // base emoji + skin-tone modifier = 1 unit
+		"👇🏻💬":                  4, // skin-tone sequence (2) + chat bubble (2)
 		"💎":                    2, // emoji is double-width
 		"🔑":                    2, // emoji is double-width
 		"💎Store%":              8, // 2 + 6
