@@ -7,18 +7,13 @@ import (
 
 func displayWidth(s string) int {
 	w := 0
-	lastWide := false
 	for _, r := range colorCleaner.Replace(s) {
 		// Emoji modifier (skin tone U+1F3FB–U+1F3FF): zero-width (merges with preceding emoji)
 		if r >= 0x1F3FB && r <= 0x1F3FF {
 			continue
 		}
-		// VS-16 (U+FE0F): makes preceding text symbol render as emoji (double-width)
+		// VS-16 (U+FE0F): emoji variation selector, zero-width
 		if r == 0xFE0F {
-			if !lastWide {
-				w++
-				lastWide = true
-			}
 			continue
 		}
 		// Combining/nonspacing marks are zero-width (e.g. Thai tone marks, diacritics)
@@ -36,14 +31,11 @@ func displayWidth(s string) int {
 			(r >= 0x30A0 && r <= 0x30FF) || // Katakana
 			(r >= 0x3000 && r <= 0x303F) || // CJK Symbols and Punctuation
 			(r >= 0xFF00 && r <= 0xFFEF) || // Fullwidth Forms
-			(r >= 0x2600 && r <= 0x27BF) || // Misc Symbols + Dingbats (⚠ ⭐ ✅ etc.)
 			(r >= 0x2B00 && r <= 0x2BFF) || // Misc Symbols and Arrows (⭐ ⬛ etc.)
 			(r >= 0x1F300 && r <= 0x1FAFF) { // Emoji
 			w += 2
-			lastWide = true
 		} else {
 			w++
-			lastWide = false
 		}
 	}
 	return w
@@ -68,19 +60,14 @@ func truncate(s string, width int) string {
 	// Truncate the visible string
 	runes := []rune(visible)
 	w := 0
-	lastWide := false
 	for i := range runes {
 		r := runes[i]
 		// Emoji modifier (skin tone): zero-width
 		if r >= 0x1F3FB && r <= 0x1F3FF {
 			continue
 		}
-		// VS-16 (U+FE0F): upgrade preceding text symbol to double-width
+		// VS-16 (U+FE0F): emoji variation selector, zero-width
 		if r == 0xFE0F {
-			if !lastWide {
-				w++
-				lastWide = true
-			}
 			continue
 		}
 		// Combining/nonspacing marks are zero-width
@@ -98,13 +85,9 @@ func truncate(s string, width int) string {
 			(r >= 0x30A0 && r <= 0x30FF) || // Katakana
 			(r >= 0x3000 && r <= 0x303F) || // CJK Symbols and Punctuation
 			(r >= 0xFF00 && r <= 0xFFEF) || // Fullwidth Forms
-			(r >= 0x2600 && r <= 0x27BF) || // Misc Symbols + Dingbats
 			(r >= 0x2B00 && r <= 0x2BFF) || // Misc Symbols and Arrows
 			(r >= 0x1F300 && r <= 0x1FAFF) { // Emoji
 			cw = 2
-			lastWide = true
-		} else {
-			lastWide = false
 		}
 		if w+cw > width-3 {
 			truncatedVisible := string(runes[:i]) + "..."
