@@ -9,6 +9,7 @@ var SparkBlocks = []rune{' ', '▁', '▂', '▃', '▄', '▅', '▆', '▇', '
 // Spark renders a sparkline from a sparse bucket→count map.
 // Each of the width positions maps to a SparkBlocks character
 // whose level is proportional to its count relative to maxCount.
+// Useful for rendering Probability Density Function (PDF) - X is value, Y is % of population.
 func Spark(counts map[int]int, width int) string {
 	if width == 0 {
 		return ""
