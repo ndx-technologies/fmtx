@@ -1,6 +1,7 @@
 package fmtx
 
 import (
+	"cmp"
 	"os"
 	"strings"
 )
@@ -76,7 +77,7 @@ func BgGreenS(s string) string {
 	return BgGreen + s + Reset
 }
 
-func ColorizeMinMax[T int | float32 | float64](s string, v, min, max T, minC, maxC string) string {
+func ColorizeMinMax[T comparable](s string, v, min, max T, minC, maxC string) string {
 	if !EnableColor {
 		return s
 	}
@@ -94,7 +95,7 @@ func ColorizeMinMax[T int | float32 | float64](s string, v, min, max T, minC, ma
 // colors[0]: v < points[0]
 // colors[i]: points[i-1] <= v < points[i]
 // colors[len(points)]: v >= points[len(points)-1]
-func ColorizeDist[T int | float32 | float64](s string, v T, points []T, colors []string) string {
+func ColorizeDist[T cmp.Ordered](s string, v T, points []T, colors []string) string {
 	if !EnableColor {
 		return s
 	}
